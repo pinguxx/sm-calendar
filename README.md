@@ -9,7 +9,7 @@ It is expected for mithril to be in global (m variable) or it will attempt to lo
 
 ## Demo
 
-[Demo]()
+[Demo](http://pinguxx.github.io/sm-calendar/)
 
 ```html
 <!DOCTYPE html>
