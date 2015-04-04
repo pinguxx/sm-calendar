@@ -17,6 +17,7 @@
             maxdate: new Date(new Date().getTime() + 30*24*60*60*1000 + 10000000)
         });
         this.calendar2 = new Calendar({small: true});
+        this.calendar3 = new Calendar({small: true});
     };
 
 
@@ -49,6 +50,18 @@
                         console.log(module.vm.calendar2.getDate());
                     }
                 }, 'get')
+            ]),
+            m('h2', 'Another calendar wth floating div'),
+            m('.ui.form.fluid', [
+                m('.two.fields', [
+                    m('.field.required', [
+                       m('', {
+                            style: 'display: block; position: absolute; left: 5px; top: 40px; width: 99%; border: 1px solid gray; z-index: 100; background-color: rgb(255, 255, 255);border-radius: 0 0 5px 5px;box-shadow: 2px 2px 3px gray;'
+                        }, [
+                            module.vm.calendar3.view()
+                        ])
+                    ])
+                ])
             ])
         ]);
     };

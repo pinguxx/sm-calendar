@@ -198,7 +198,9 @@ var Calendar = function (properties) {
                 }
             }
         }, [
-            m('.column', [
+            m('.column', {
+                style: 'padding-bottom: 0;'
+            }, [
                 previous ? m('a[href=#]', {
                     onclick: function (e) {
                         e.preventDefault();
@@ -209,9 +211,11 @@ var Calendar = function (properties) {
                     !cal.small ? m('span', cal.i18n.monthsLong[cal.date().getMonth() - 1  < 0 ? cal.i18n.months.length - 1 : cal.date().getMonth() - 1]) : ''
                 ]) : ''
             ]),
-            m('.column.center.aligned.eight.wide', [
+            m('.column.center.aligned.eight.wide', {
+                style: 'padding-bottom: 0;'
+            }, [
                 m('select',  {
-                    style: 'border: 0;background: transparent;padding: 0 3px;cursor: pointer;-webkit-appearance: none;-moz-appearance: none;appearance: none;text-decoration: underline;',
+                    style: 'border: 0;background: transparent;padding: 0 3px;cursor: pointer;-webkit-appearance: none;-moz-appearance: none;appearance: none;text-decoration: underline;display: inline;width: auto;',
                     value: cal.date().getMonth(),
                     onchange: function () {
                         cal.date().setMonth(this.value);
@@ -229,7 +233,9 @@ var Calendar = function (properties) {
                 /*!cal.small ? cal.i18n.monthsLong[cal.date().getMonth()] : cal.i18n.months[cal.date().getMonth()],
                 ' ' + cal.date().getFullYear()*/
             ]),
-            m('.column.right.aligned', [
+            m('.column.right.aligned', {
+                style: 'padding-bottom: 0;'
+            }, [
                 next ? m('a[href=#]', {
                     onclick: function (e) {
                         e.preventDefault();
@@ -254,9 +260,11 @@ var Calendar = function (properties) {
                     }))
                 ])
             ]),
-            m('.column.center.aligned.sixteen.wide', [
+            m('.column.center.aligned.sixteen.wide', {
+                style: 'padding-top: 0;'
+            }, [
                 m('select',  {
-                    style: 'border: 0;background: transparent;padding: 0 3px;cursor: pointer;-webkit-appearance: none;-moz-appearance: none;appearance: none;text-decoration: underline;',
+                    style: 'border: 0;background: transparent;padding: 0 3px;cursor: pointer;-webkit-appearance: none;-moz-appearance: none;appearance: none;text-decoration: underline;display: inline;width: auto;',
                     value: cal.hours(),
                     onchange: m.withAttr('value', cal.hours),
                     config: function (element) {
@@ -274,7 +282,7 @@ var Calendar = function (properties) {
                 })),
                 ':',
                 m('select',  {
-                    style: 'border: 0;background: transparent;padding: 0 3px;cursor: pointer;-webkit-appearance: none;-moz-appearance: none;appearance: none;text-decoration: underline;',
+                    style: 'border: 0;background: transparent;padding: 0 3px;cursor: pointer;-webkit-appearance: none;-moz-appearance: none;appearance: none;text-decoration: underline;display: inline;width: auto;',
                     value: cal.minutes(),
                     onchange: m.withAttr('value', cal.minutes),
                     config: function (element) {
