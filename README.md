@@ -1,4 +1,4 @@
-# sm-table
+# sm-calendar
 Mithril semantic-ui calendar widget
 
 It requires mithril and semantic-ui-table and semantic-ui-grid
@@ -126,3 +126,4 @@ You can get the seleted date
 ```JavaScrit
 calendar.getDate(); //returns Date object
 ```
+
