@@ -1,0 +1,27 @@
+{
+  "name": "sm-calendar",
+  "version": "0.0.1",
+  "description": "mithril semantic-ui calendar widget",
+  "main": "Calendar.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pinguxx/sm-calendar.git"
+  },
+  "keywords": [
+    "mithril",
+    "semantic-ui",
+    "calendar"
+  ],
+  "author": "Ivan Torres <pinguxx@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pinguxx/sm-calendar/issues"
+  },
+  "homepage": "https://github.com/pinguxx/sm-calendar",
+  "dependencies": {
+    "mithril": "~0.1.30"
+  }
+}
