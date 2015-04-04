@@ -68,7 +68,7 @@ var Calendar = function (properties) {
                 maxlength: 4,
                 type: 'text',
                 required: 'required',
-                style: !calendar.editingYear() ? 'display:none;' : 'width: 40px;',
+                style: !calendar.editingYear() ? 'display:none;' : 'width: 40px;padding: 1px;',
                 config: function (element) {
                     if (calendar.editingYear()) {
                         element.focus();
@@ -127,7 +127,7 @@ var Calendar = function (properties) {
                         e.preventDefault();
                         cal.value(date);
                         if (properties.onclick) {
-                            properties.onclick(date);
+                            properties.onclick(cal.getDate());
                         }
                     }
                 }, date.getDate()) :
