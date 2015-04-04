@@ -99,7 +99,9 @@ It accepts the following properties, all of them are optional
  * maxdate, max date that can be selected
  * small, boolean, if you want to show a small calendar
  * value, date, current selected date
- * formatCell, function to format the cell, recieves a date object
+ * formatCell, function to format the cell, recieves a date object,
+ * time, boolean, to display the time
+ * onclick, function to react when the cell its clicked, doesnt work if formatcell its passed too
  * i18n, object map with:
     * **monthsLong**, array of string months in a long format `January, February` ...
     * **months**, array of string months in a small format `Jan, Feb` ...

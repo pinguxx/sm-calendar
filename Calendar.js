@@ -6,6 +6,8 @@ var Calendar = function (properties) {
         m = window.m || require("mithril/mithril"),
         actual = new Date(),
         functionType = Object.prototype.toString.call(function () {});
+    
+    properties.time = properties.time === undefined ? true : properties.time;
 
     calendar.actual = m.prop(new Date(actual.getFullYear(), actual.getMonth(), actual.getDate()));
 
@@ -124,6 +126,9 @@ var Calendar = function (properties) {
                     onclick: function (e) {
                         e.preventDefault();
                         cal.value(date);
+                        if (properties.onclick) {
+                            properties.onclick(date);
+                        }
                     }
                 }, date.getDate()) :
                 date.getDate()
@@ -153,11 +158,13 @@ var Calendar = function (properties) {
     };
 
     //calendar.date = m.prop(new Date());
-    calendar.hours = m.prop(calendar.now().getHours());
-    calendar.minutes = m.prop(calendar.now().getMinutes());
+    calendar.hours = properties.time ? m.prop(calendar.now().getHours()) : m.prop(0);
+    calendar.minutes = properties.time ? m.prop(calendar.now().getMinutes()) : m.prop(0);
     calendar.now = m.prop(new Date(calendar.now().getFullYear(), calendar.now().getMonth(), calendar.now().getDate()));
     calendar.date = m.prop(new Date(calendar.now().getFullYear(), calendar.now().getMonth(), 1));
     calendar.goToDate(properties.value || calendar.now());//m.prop(calendar.now());
+    
+    
 
     calendar.view = function () {
         var date,
@@ -262,7 +269,7 @@ var Calendar = function (properties) {
             ]),
             m('.column.center.aligned.sixteen.wide', {
                 style: 'padding-top: 0;'
-            }, [
+            }, properties.time ? [
                 m('select',  {
                     style: 'border: 0;background: transparent;padding: 0 3px;cursor: pointer;-webkit-appearance: none;-moz-appearance: none;appearance: none;text-decoration: underline;display: inline;width: auto;',
                     value: cal.hours(),
@@ -299,6 +306,14 @@ var Calendar = function (properties) {
                 })),
                 /*!cal.small ? cal.i18n.monthsLong[cal.date().getMonth()] : cal.i18n.months[cal.date().getMonth()],
                 ' ' + cal.date().getFullYear()*/
+                m('a[href="#"]', {
+                    style: 'padding: 0 3px;float:right;',
+                    onclick: function (e) {
+                        e.preventDefault();
+                        cal.goToDate(new Date());
+                    }
+                }, 'Today')
+            ] : [
                 m('a[href="#"]', {
                     style: 'padding: 0 3px;float:right;',
                     onclick: function (e) {

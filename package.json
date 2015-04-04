@@ -1,6 +1,6 @@
 {
   "name": "sm-calendar",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "mithril semantic-ui calendar widget",
   "main": "Calendar.js",
   "scripts": {
