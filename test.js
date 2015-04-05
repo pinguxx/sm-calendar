@@ -10,7 +10,7 @@
             maxdate: new Date(new Date().getTime() + 30*24*60*60*1000 + 10000000)
         });
         this.calendar2 = new Calendar({small: true});
-        this.calendar3 = new Calendar({small: true, time: false, onclick: function (date) {
+        this.calendar3 = new Calendar({small: true, time: false, pageclass: true, onclick: function (date) {
             alert(date);
         }});
     };
