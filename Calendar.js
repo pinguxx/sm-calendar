@@ -241,7 +241,10 @@ var Calendar = function (properties) {
             config: function (el, init) {
                 if (!init) {
                     if (el.parentNode.className.indexOf('grid') < 0) {
-                        el.className += " grid page";
+                        el.className += " grid";
+                        if (properties.pageclass) {
+                            el.className += ' page';
+                        }
                         el.className = el.className.replace('row','');
                     }
                 }
