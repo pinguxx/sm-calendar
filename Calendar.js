@@ -250,13 +250,13 @@ var Calendar = function (properties) {
             m('.column', {
                 style: 'padding-bottom: 0;'
             }, [
-                previous ? m('a[href=#]', {
+                previous ? m('a[href=#].sm-calendar-arrow', {
                     onclick: function (e) {
                         e.preventDefault();
                         cal.date().setDate(cal.date().getDate() - daysInMonth(cal.date().getMonth(), cal.date().getFullYear()));
                     }
                 }, [
-                    m("i.angle.double.left.icon"),
+                    m("i.angle.double.left.icon.sm-calendar-arrow"),
                     !cal.small ? m('span', cal.i18n.monthsLong[cal.date().getMonth() - 1  < 0 ? cal.i18n.months.length - 1 : cal.date().getMonth() - 1]) : ''
                 ]) : ''
             ]),
@@ -286,14 +286,14 @@ var Calendar = function (properties) {
             m('.column.right.aligned', {
                 style: 'padding-bottom: 0;'
             }, [
-                next ? m('a[href=#]', {
+                next ? m('a[href=#].sm-calendar-arrow', {
                     onclick: function (e) {
                         e.preventDefault();
                         cal.date().setMonth(cal.date().getMonth() + 1);
                     }
                 }, [
                     !cal.small ? m('span', cal.i18n.monthsLong[cal.date().getMonth() + 1  >= cal.i18n.months.length ? 0 : cal.date().getMonth() + 1]) : '',
-                    m("i.angle.double.right.icon")
+                    m("i.angle.double.right.icon.sm-calendar-arrow")
                 ]) : ''
             ]),
             m('.column.sixteen.wide', [
