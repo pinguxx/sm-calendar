@@ -128,4 +128,8 @@ You can get the seleted date
 ```JavaScrit
 calendar.getDate(); //returns Date object
 ```
-
+You can set the maxdate and mindate
+```JavaScrit
+calendar.setMaxDate(date);
+calendar.setMinDate(date);
+```
