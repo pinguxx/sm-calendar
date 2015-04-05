@@ -5,13 +5,6 @@
 
     module.controller = function () {
         module.vm.init();
-    };
-
-    module.vm = {};
-    module.vm.init = function (data) {
-        this.customers = data;
-        this.rowsperpage = 10;
-        this.filter = m.prop('');
         this.calendar = new Calendar({
             mindate: new Date(new Date().getTime() + 10*24*60*60*1000),
             maxdate: new Date(new Date().getTime() + 30*24*60*60*1000 + 10000000)
@@ -22,8 +15,15 @@
         }});
     };
 
+    module.vm = {};
+    module.vm.init = function (data) {
+        this.customers = data;
+        this.rowsperpage = 10;
+        this.filter = m.prop('');
+    };
 
-    module.view = function (/*ctrl*/) {
+
+    module.view = function (ctrl) {
         return m('', [
             m('.ui.grid.page', [
                 m('br'),
@@ -31,10 +31,10 @@
             ]),
             m('.ui.grid.page', [
                 m('h2', 'Basic Calendar'),
-                module.vm.calendar.view(),
+                ctrl.calendar.view(),
                 m('button.ui..button.primary', {
                     onclick: function() {
-                        console.log(module.vm.calendar.getDate());
+                        console.log(ctrl.calendar.getDate());
                     }
                 }, 'get')
             ]),
@@ -43,13 +43,13 @@
                 m('.row', [
                     m('.ui.column.five.wide', [
                         m('.ui.grid', [
-                            module.vm.calendar2.view()
+                            ctrl.calendar2.view()
                         ])
                     ])
                 ]),
                 m('button.ui.button.primary', {
                     onclick: function() {
-                        console.log(module.vm.calendar2.getDate());
+                        console.log(ctrl.calendar2.getDate());
                     }
                 }, 'get')
             ]),
@@ -60,11 +60,21 @@
                        m('', {
                             style: 'display: block; position: absolute; left: 5px; top: 40px; width: 99%; border: 1px solid gray; z-index: 100; background-color: rgb(255, 255, 255);border-radius: 0 0 5px 5px;box-shadow: 2px 2px 3px gray;'
                         }, [
-                            module.vm.calendar3.view()
+                            ctrl.calendar3.view()
                         ])
                     ])
                 ])
-            ])
+            ]),
+            m('button.ui.button.primary', {
+                onclick: function() {
+                    ctrl.calendar3.setMinDate(new Date(2011, 9, 11));
+                }
+            }, 'mindate to 11/11/11'),
+            m('button.ui.button.primary', {
+                onclick: function() {
+                    ctrl.calendar3.setMaxDate(new Date(2012, 8, 11));
+                }
+            }, 'maxdate to 11/11/12')
         ]);
     };
 

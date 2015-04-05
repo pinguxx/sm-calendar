@@ -55,16 +55,17 @@ var Calendar = function (properties) {
     }
 
     calendar.editYear = function(date) {
-        var cal = this;
+        var cal = this,
+            year = date().getFullYear();
         return m('span', [
             m('span', {
                 onclick: function () {
                     calendar.editingYear(true);
                 },
                 style: calendar.editingYear() ? 'display:none;' : 'cursor: pointer;text-decoration: underline;'
-            }, date().getFullYear()),
+            }, year),
             m('input', {
-                value: date().getFullYear(),
+                value: year,
                 maxlength: 4,
                 type: 'text',
                 required: 'required',
@@ -79,14 +80,14 @@ var Calendar = function (properties) {
                     if (+this.value < 1800 || +this.value > 2999) {
                         return;
                     }
-                    if (calendar.mindate && this.value < calendar.mindate.getFullYear()) {
+                    if (cal.mindate && this.value < cal.mindate.getFullYear()) {
                         return;
                     }
-                    if (calendar.maxdate && this.value > calendar.maxdate.getFullYear()) {
+                    if (cal.maxdate && this.value > cal.maxdate.getFullYear()) {
                         return;
                     }
                     cal.date().setFullYear(this.value);
-                    calendar.editingYear(false);
+                    cal.editingYear(false);
                 }
             }),
         ]);
@@ -157,14 +158,35 @@ var Calendar = function (properties) {
         return new Date(this.value().getFullYear(), this.value().getMonth(), this.value().getDate(), this.hours(), this.minutes());
     };
 
-    //calendar.date = m.prop(new Date());
     calendar.hours = properties.time ? m.prop(calendar.now().getHours()) : m.prop(0);
     calendar.minutes = properties.time ? m.prop(calendar.now().getMinutes()) : m.prop(0);
     calendar.now = m.prop(new Date(calendar.now().getFullYear(), calendar.now().getMonth(), calendar.now().getDate()));
     calendar.date = m.prop(new Date(calendar.now().getFullYear(), calendar.now().getMonth(), 1));
     calendar.goToDate(properties.value || calendar.now());//m.prop(calendar.now());
     
+    calendar.setMaxDate = function (date) {
+        m.startComputation();
+        calendar.maxdate = date || null;
+        if (calendar.maxdate) {
+            calendar.maxdate_nt = new Date(calendar.maxdate.getFullYear(), calendar.maxdate.getMonth(), calendar.maxdate.getDate());
+        }
+        if (calendar.maxdate && +calendar.now() > +calendar.maxdate) {
+            calendar.now(calendar.maxdate);
+        }
+        m.endComputation();
+    };
     
+    calendar.setMinDate = function (date) {
+        m.startComputation();
+        calendar.mindate = date || null;
+        if (date) {
+            calendar.mindate_nt = new Date(calendar.mindate.getFullYear(), calendar.mindate.getMonth(), calendar.mindate.getDate());
+        }
+        if (calendar.mindate && +calendar.now() < +calendar.mindate) {
+            calendar.now(calendar.mindate);
+        }
+        m.endComputation();
+    };
 
     calendar.view = function () {
         var date,
@@ -173,10 +195,36 @@ var Calendar = function (properties) {
             all = [],
             cal = this,
             next = true,
+            year,
             previous = true;
         //add dates
         //create data view
         date = new Date(cal.date().getFullYear(), cal.date().getMonth(), 1);
+        year = date.getFullYear();
+        
+        if (calendar.mindate && (cal.date().getFullYear() <= cal.mindate_nt.getFullYear())) {
+            year = cal.mindate.getFullYear();
+            cal.date().setFullYear(year);
+            if (cal.date().getMonth() - 1 < cal.mindate.getMonth()) {
+                date.setMonth(cal.mindate.getMonth());
+                previous = false;
+            }
+            if (cal.date().getMonth() < cal.mindate.getMonth()) {
+                cal.date().setMonth(cal.mindate.getMonth());
+            }
+        }
+        
+        if (calendar.maxdate && (cal.date().getFullYear() >= cal.maxdate_nt.getFullYear())) {
+            year = cal.maxdate.getFullYear();
+            cal.date().setFullYear(year);
+            if (cal.date().getMonth() + 1 > cal.maxdate.getMonth()) {
+                date.setMonth(cal.maxdate.getMonth());
+                cal.date().setMonth(cal.maxdate.getMonth());
+                next = false;
+            }
+        }
+        
+        date.setFullYear(year);
         date.setDate(date.getDate() - date.getDay());
         for (var i = 1; i < 43; i += 1) {
             var d = date.getDate();
@@ -188,13 +236,7 @@ var Calendar = function (properties) {
             }
         }
         dates = m.prop(all);
-
-        if (calendar.mindate && (cal.date().getMonth() - 1) < calendar.mindate.getMonth()) {
-            previous = false;
-        }
-        if (calendar.maxdate && (cal.date().getMonth() + 1) > calendar.maxdate.getMonth()) {
-            next = false;
-        }
+        
         return m('.ui.row.four.column.sm-calendar' + (cal.small ? '.sm-calendar-small' : ''), {
             config: function (el, init) {
                 if (!init) {
@@ -224,21 +266,22 @@ var Calendar = function (properties) {
                 m('select',  {
                     style: 'border: 0;background: transparent;padding: 0 3px;cursor: pointer;-webkit-appearance: none;-moz-appearance: none;appearance: none;text-decoration: underline;display: inline;width: auto;',
                     value: cal.date().getMonth(),
+                    config: function (el) {
+                        el.value = cal.date().getMonth();
+                    },
                     onchange: function () {
                         cal.date().setMonth(this.value);
                     }
                 }, cal.i18n.months.map(function (item, idx) {
-                    if (calendar.mindate && idx < calendar.mindate.getMonth()) {
+                    if (cal.mindate && (+cal.date().getFullYear() <= +cal.mindate_nt.getFullYear()) && idx < cal.mindate.getMonth()) {
                         return '';
                     }
-                    if (calendar.maxdate && idx > calendar.maxdate.getMonth()) {
+                    if (cal.maxdate && (+cal.date().getFullYear() >= +cal.maxdate_nt.getFullYear()) && idx > cal.maxdate.getMonth()) {
                         return '';
                     }
                     return m('option[value=' + idx + ']', !cal.small ? cal.i18n.monthsLong[idx] : cal.i18n.months[idx]);
                 })),
                 calendar.editYear (cal.date)
-                /*!cal.small ? cal.i18n.monthsLong[cal.date().getMonth()] : cal.i18n.months[cal.date().getMonth()],
-                ' ' + cal.date().getFullYear()*/
             ]),
             m('.column.right.aligned', {
                 style: 'padding-bottom: 0;'
@@ -304,8 +347,6 @@ var Calendar = function (properties) {
                     }
                     return m('option[value=' + idx + ']', idx < 10 ? ('0' + idx) : idx);
                 })),
-                /*!cal.small ? cal.i18n.monthsLong[cal.date().getMonth()] : cal.i18n.months[cal.date().getMonth()],
-                ' ' + cal.date().getFullYear()*/
                 m('a[href="#"]', {
                     style: 'padding: 0 3px;float:right;',
                     onclick: function (e) {
