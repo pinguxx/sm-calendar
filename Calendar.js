@@ -106,30 +106,37 @@ var Calendar = function (properties) {
 
     calendar.i18n = merge(calendar.i18n, properties.i18n);
     calendar.formatCell = properties.formatCell || function (date) {
-        var style = '',
-            claz = '',
+        var style = {
+            cursor: 'pointer'
+        }
+        var claz = '',
             cal = this;
         if (+date === +this.actual()) {
-            style = 'background-color:#00b5ad;color:#fff;';
+            style['background-color'] = '#00b5ad';
+            style.color = '#fff';
         }
         if (+date === +this.value()) {
-            style = 'background-color:#5bbd72;color:#fff;';
+            style['background-color'] = '#5bbd72';
+            style.color = '#fff';
         }
         if ((cal.mindate_nt && date < cal.mindate_nt) || (cal.maxdate_nt && date > cal.maxdate_nt)) {
             claz = '.disabled';
         }
         return m('td.center.aligned' + claz, {
-            style: style
+            style: style,
+            onclick: function (e) {
+                e.preventDefault();
+                cal.value(date);
+                if (properties.onclick) {
+                    properties.onclick(cal.getDate());
+                }
+            }
         }, [
             claz.indexOf('.disabled') < 0 ?
                 m('a[href="#"]', {
                     style: style,
                     onclick: function (e) {
                         e.preventDefault();
-                        cal.value(date);
-                        if (properties.onclick) {
-                            properties.onclick(cal.getDate());
-                        }
                     }
                 }, date.getDate()) :
                 date.getDate()
