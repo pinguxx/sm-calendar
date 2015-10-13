@@ -3,10 +3,10 @@ var Calendar = function (properties) {
     'use strict';
     properties = properties || {};
     var calendar = {},
-        m = window.m || require("mithril/mithril"),
+        m = window.m || require("mithril"),
         actual = new Date(),
         functionType = Object.prototype.toString.call(function () {});
-    
+
     properties.time = properties.time === undefined ? true : properties.time;
 
     calendar.actual = m.prop(new Date(actual.getFullYear(), actual.getMonth(), actual.getDate()));
@@ -106,30 +106,37 @@ var Calendar = function (properties) {
 
     calendar.i18n = merge(calendar.i18n, properties.i18n);
     calendar.formatCell = properties.formatCell || function (date) {
-        var style = '',
-            claz = '',
+        var style = {
+            cursor: 'pointer'
+        }
+        var claz = '',
             cal = this;
         if (+date === +this.actual()) {
-            style = 'background-color:#00b5ad;color:#fff;';
+            style['background-color'] = '#00b5ad';
+            style.color = '#fff';
         }
         if (+date === +this.value()) {
-            style = 'background-color:#5bbd72;color:#fff;';
+            style['background-color'] = '#5bbd72';
+            style.color = '#fff';
         }
         if ((cal.mindate_nt && date < cal.mindate_nt) || (cal.maxdate_nt && date > cal.maxdate_nt)) {
             claz = '.disabled';
         }
         return m('td.center.aligned' + claz, {
-            style: style
+            style: style,
+            onclick: function (e) {
+                e.preventDefault();
+                cal.value(date);
+                if (properties.onclick) {
+                    properties.onclick(cal.getDate());
+                }
+            }
         }, [
             claz.indexOf('.disabled') < 0 ?
                 m('a[href="#"]', {
                     style: style,
                     onclick: function (e) {
                         e.preventDefault();
-                        cal.value(date);
-                        if (properties.onclick) {
-                            properties.onclick(cal.getDate());
-                        }
                     }
                 }, date.getDate()) :
                 date.getDate()
@@ -163,7 +170,7 @@ var Calendar = function (properties) {
     calendar.now = m.prop(new Date(calendar.now().getFullYear(), calendar.now().getMonth(), calendar.now().getDate()));
     calendar.date = m.prop(new Date(calendar.now().getFullYear(), calendar.now().getMonth(), 1));
     calendar.goToDate(properties.value || calendar.now());//m.prop(calendar.now());
-    
+
     calendar.setMaxDate = function (date) {
         m.startComputation();
         calendar.maxdate = date || null;
@@ -175,7 +182,7 @@ var Calendar = function (properties) {
         }
         m.endComputation();
     };
-    
+
     calendar.setMinDate = function (date) {
         m.startComputation();
         calendar.mindate = date || null;
@@ -201,7 +208,7 @@ var Calendar = function (properties) {
         //create data view
         date = new Date(cal.date().getFullYear(), cal.date().getMonth(), 1);
         year = date.getFullYear();
-        
+
         if (calendar.mindate && (cal.date().getFullYear() <= cal.mindate_nt.getFullYear())) {
             year = cal.mindate.getFullYear();
             cal.date().setFullYear(year);
@@ -213,7 +220,7 @@ var Calendar = function (properties) {
                 cal.date().setMonth(cal.mindate.getMonth());
             }
         }
-        
+
         if (calendar.maxdate && (cal.date().getFullYear() >= cal.maxdate_nt.getFullYear())) {
             year = cal.maxdate.getFullYear();
             cal.date().setFullYear(year);
@@ -223,7 +230,7 @@ var Calendar = function (properties) {
                 next = false;
             }
         }
-        
+
         date.setFullYear(year);
         date.setDate(date.getDate() - date.getDay());
         for (var i = 1; i < 43; i += 1) {
@@ -236,7 +243,7 @@ var Calendar = function (properties) {
             }
         }
         dates = m.prop(all);
-        
+
         return m('.ui.row.four.column.sm-calendar' + (cal.small ? '.sm-calendar-small' : ''), {
             config: function (el, init) {
                 if (!init) {
